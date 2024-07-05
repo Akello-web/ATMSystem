@@ -1,24 +1,23 @@
 package kz.projects.atmSystem.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
+@Table(name = "t_transactions")
 public class Transaction {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
   @Enumerated(EnumType.STRING)
   private TransactionType type;
-
-  private BigDecimal amount;
-
+  private double amount;
   private LocalDateTime date;
-
   @ManyToOne
-  @JoinColumn(name = "account_number", referencedColumnName = "accountNumber")
-  private User user;
+  private UserModel user;
 }
