@@ -14,10 +14,14 @@ public class Transaction {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
   @Enumerated(EnumType.STRING)
   private TransactionType type;
+
   private double amount;
+
   private LocalDateTime date;
+
   @ManyToOne
-  private UserModel user;
+  private User user;
 }

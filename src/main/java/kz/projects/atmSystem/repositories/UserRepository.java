@@ -1,12 +1,11 @@
 package kz.projects.atmSystem.repositories;
 
-import kz.projects.atmSystem.model.UserModel;
+import kz.projects.atmSystem.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserModel, Long> {
-  UserModel findByAccountNumber(String accountNumber);
+public interface UserRepository extends JpaRepository<User, Long> {
+  User findByAccountNumber(String accountNumber);
 
-  UserModel findByPin(String pin);
 }
