@@ -47,7 +47,7 @@ public class SecurityConfig {
             .httpBasic(Customizer.withDefaults())
             .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
                     .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
-                    .formLogin(AbstractAuthenticationFilterConfigurer::disable)
+            .formLogin(AbstractAuthenticationFilterConfigurer::disable)
             .logout(httpSecurityLogoutConfigurer -> {
               httpSecurityLogoutConfigurer
                       .logoutUrl("/auth/logout")

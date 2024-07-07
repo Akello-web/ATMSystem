@@ -9,9 +9,7 @@ import kz.projects.atmSystem.repositories.TransactionRepository;
 import kz.projects.atmSystem.service.TransactionService;
 import kz.projects.atmSystem.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,6 +39,7 @@ public class TransactionServiceImpl implements TransactionService {
   }
 
   @Override
+  @Transactional
   public void withdrawAmount(Double amount) {
     MyUserDetails currentUser = userService.getCurrentSessionUser();
     currentUser.getUser().setBalance(userService.getCurrentUserBalance() - amount);
@@ -55,6 +54,7 @@ public class TransactionServiceImpl implements TransactionService {
   }
 
   @Override
+  @Transactional
   public void transferAmount(String accountNumber, Double amount) {
     MyUserDetails currentUser = userService.getCurrentSessionUser();
     if (!Objects.equals(currentUser.getUser().getAccountNumber(), accountNumber)){
