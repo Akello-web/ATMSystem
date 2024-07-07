@@ -9,10 +9,13 @@ import kz.projects.atmSystem.repositories.TransactionRepository;
 import kz.projects.atmSystem.service.TransactionService;
 import kz.projects.atmSystem.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -53,20 +56,26 @@ public class TransactionServiceImpl implements TransactionService {
 
   @Override
   public void transferAmount(String accountNumber, Double amount) {
-    User userToTransfer = userService.getUser(accountNumber);
-    Double userToTransferAmount = userToTransfer.getBalance();
-    userToTransfer.setBalance(userToTransferAmount + amount);
-    userService.saveUser(userToTransfer);
-    withdrawAmount(amount);
-
     MyUserDetails currentUser = userService.getCurrentSessionUser();
-    Transaction transaction = new Transaction();
-    transaction.setType(TransactionType.TRANSFER);
-    transaction.setAmount(amount);
-    transaction.setDate(LocalDateTime.now());
-    transaction.setUser(currentUser.getUser());
-    transactionRepository.save(transaction);
+    if (!Objects.equals(currentUser.getUser().getAccountNumber(), accountNumber)){
+      User userToTransfer = userService.getUser(accountNumber);
 
+      withdrawAmount(amount);
+
+      Double userToTransferAmount = userToTransfer.getBalance();
+      userToTransfer.setBalance(userToTransferAmount + amount);
+      userService.saveUser(userToTransfer);
+
+      Transaction transaction = new Transaction();
+      transaction.setType(TransactionType.TRANSFER);
+      transaction.setAmount(amount);
+      transaction.setDate(LocalDateTime.now());
+      transaction.setUser(currentUser.getUser());
+      transactionRepository.save(transaction);
+    }
+    else {
+      throw new IllegalArgumentException("Cannot transfer to the same account");
+    }
   }
 
   @Override
