@@ -31,6 +31,11 @@ public class UserServiceImpl implements UserService {
   private final PasswordEncoder passwordEncoder;
 
   @Override
+  public void saveUser(User user) {
+    userRepository.save(user);
+  }
+
+  @Override
   public UserDetails loginUser(String accountNumber, String pin) {
     UserDetails userDetails = myUserDetailsService.loadUserByUsername(accountNumber);
     if (passwordEncoder.matches(pin, userDetails.getPassword())) {
@@ -74,6 +79,17 @@ public class UserServiceImpl implements UserService {
       }
     }
     return null;
+  }
+
+  @Override
+  public Double getCurrentUserBalance() {
+    MyUserDetails currentUser = getCurrentSessionUser();
+    return currentUser.getUser().getBalance();
+  }
+
+  @Override
+  public User getUser(String accountNumber) {
+    return userRepository.findByAccountNumber(accountNumber);
   }
 
 }
