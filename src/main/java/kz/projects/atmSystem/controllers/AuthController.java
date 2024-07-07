@@ -2,7 +2,7 @@ package kz.projects.atmSystem.controllers;
 
 import kz.projects.atmSystem.dto.AuthRequest;
 import kz.projects.atmSystem.model.User;
-import kz.projects.atmSystem.service.UserDetailsService;
+import kz.projects.atmSystem.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
 
-  private final UserDetailsService userService;
+  private final UserServiceImpl userService;
 
   @PostMapping(value = "register")
   public ResponseEntity<User> registerUser(@RequestBody User user){
@@ -29,12 +29,6 @@ public class AuthController {
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
     }
-  }
-
-  @PostMapping("/logout")
-  public ResponseEntity<?> logout() {
-    userService.logout();
-    return ResponseEntity.ok("Logout successfully");
   }
 
 

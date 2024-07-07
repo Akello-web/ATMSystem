@@ -1,12 +1,15 @@
 package kz.projects.atmSystem.service.impl;
 
+import kz.projects.atmSystem.model.MyUserDetails;
 import kz.projects.atmSystem.model.Permissions;
 import kz.projects.atmSystem.model.User;
 import kz.projects.atmSystem.repositories.PermissionRepository;
 import kz.projects.atmSystem.repositories.UserRepository;
-import kz.projects.atmSystem.service.UserDetailsService;
+import kz.projects.atmSystem.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,48 +20,35 @@ import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
-public class UserDetailsServiceImpl implements UserDetailsService {
-  private final UserRepository userRepository;
+public class UserServiceImpl implements UserService {
 
-  private final PasswordEncoder passwordEncoder;
+  private final UserRepository userRepository;
 
   private final PermissionRepository permissionRepository;
 
+  private final MyUserDetailsService myUserDetailsService;
 
-  @Override
-  public UserDetails loadUserByUsername(String username) {
-    User user = userRepository.findByAccountNumber(username);
-    if (user != null) {
-      return user;
-    } else {
-      throw new UsernameNotFoundException(username);
-    }
-  }
+  private final PasswordEncoder passwordEncoder;
 
   @Override
   public UserDetails loginUser(String accountNumber, String pin) {
-      UserDetails userDetails = loadUserByUsername(accountNumber);
-      if (passwordEncoder.matches(pin, userDetails.getPassword())) {
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(accountNumber, pin,
-                        userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        return userDetails;
-      } else {
-        throw new UsernameNotFoundException("Invalid credentials");
-      }
-  }
-
-  @Override
-  public void logout() {
-      SecurityContextHolder.clearContext();
+    UserDetails userDetails = myUserDetailsService.loadUserByUsername(accountNumber);
+    if (passwordEncoder.matches(pin, userDetails.getPassword())) {
+      UsernamePasswordAuthenticationToken authenticationToken =
+              new UsernamePasswordAuthenticationToken(userDetails, null,
+                      userDetails.getAuthorities());
+      SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+      return userDetails;
+    } else {
+      throw new UsernameNotFoundException("Invalid credentials");
+    }
   }
 
   @Override
   public User addUser(User user) {
     User checkUser = userRepository.findByAccountNumber(user.getAccountNumber());
     if(checkUser==null){
-      user.setPin(passwordEncoder.encode(user.getPassword()));
+      user.setPin(passwordEncoder.encode(user.getPin()));
       Permissions defaultPermission = permissionRepository.findByRole("ROLE_USER");
 
       if (defaultPermission == null) {
@@ -74,5 +64,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
   }
 
+  @Override
+  public MyUserDetails getCurrentSessionUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+      MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
+      if (myUserDetails != null) {
+        return myUserDetails;
+      }
+    }
+    return null;
+  }
 
 }
