@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceImplTest {
+public class UserLoginServiceImplTest {
   @Mock
   private MyUserDetailsService myUserDetailsService;
 

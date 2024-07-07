@@ -23,6 +23,4 @@ public class User {
 
   @ManyToMany(fetch = FetchType.EAGER)
   private List<Permissions> permissionList;
-
-
 }
