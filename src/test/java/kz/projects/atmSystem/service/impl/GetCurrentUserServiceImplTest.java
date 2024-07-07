@@ -26,7 +26,7 @@ public class GetCurrentUserServiceImplTest {
   public void testGetCurrentSessionUserAuthenticated() {
     User user = new User();
     user.setAccountNumber("testUser");
-    user.setPin("1234");
+    user.setPin("encodedPin");
     MyUserDetails userDetails = new MyUserDetails(user);
     when(authentication.getPrincipal()).thenReturn(userDetails);
 
