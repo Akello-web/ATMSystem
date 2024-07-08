@@ -16,6 +16,17 @@ The Automated Teller Machine (ATM) System is a secure and efficient banking appl
   - Manage System Issues (e.g., replenishing cash, resolving transaction errors)
   - Update Account Information
 
+## Technologies Used
+- **Java**: Programming language for backend development.
+- **Spring Boot**: Facilitates rapid development and integration with its auto-configuration and starter dependencies.
+- **Spring Security**: Provides robust authentication and authorization mechanisms to secure endpoints and manage user sessions.
+- **Spring Data JPA**: Implements data access and persistence layer for managing user accounts and transaction records.
+- **PostgreSQL**: Relational database management system for storing user and transaction data securely.
+- **Swagger/OpenAPI**: Documentation tool for designing, building, documenting, and consuming RESTful APIs.
+- **JUnit**: Testing framework for unit testing of Java applications.
+- **Mockito**: Mocking framework for unit tests in Java.
+- **Gradle**: Build automation tool for managing dependencies and building Java applications.
+
 ## Architecture
 ### Backend Framework
 - **Spring Boot**: Facilitates rapid development and integration with its auto-configuration and starter dependencies.
