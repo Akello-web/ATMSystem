@@ -1,5 +1,7 @@
 package kz.projects.atmSystem.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.projects.atmSystem.model.Transaction;
 import kz.projects.atmSystem.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +16,13 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin")
+@Tag(name = "Admin Operations", description = "Endpoints for admin operations")
 public class AdminController {
 
   private final TransactionService transactionService;
 
   @GetMapping(value = "transactions")
+  @Operation(summary = "Get Transactions List", description = "Retrieve a list of transactions")
   public ResponseEntity<List<Transaction>> getTransactionsList(){
     return new ResponseEntity<>(transactionService.getTransactions(), HttpStatus.OK);
   }
