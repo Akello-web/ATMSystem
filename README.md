@@ -61,8 +61,3 @@ The Automated Teller Machine (ATM) System is a secure and efficient banking appl
 - Gradle build tool
 - PostgreSQL database
 
-### Steps to Run
-1. Clone the repository:
-   ```bash
-   git clone <repository_url>
-   cd atm-system
