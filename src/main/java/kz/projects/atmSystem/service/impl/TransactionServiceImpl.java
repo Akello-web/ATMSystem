@@ -60,7 +60,8 @@ public class TransactionServiceImpl implements TransactionService {
     if (!Objects.equals(currentUser.getUser().getAccountNumber(), accountNumber)){
       User userToTransfer = userService.getUser(accountNumber);
 
-      withdrawAmount(amount);
+      currentUser.getUser().setBalance(userService.getCurrentUserBalance() - amount);
+      userService.saveUser(currentUser.getUser());
 
       Double userToTransferAmount = userToTransfer.getBalance();
       userToTransfer.setBalance(userToTransferAmount + amount);
