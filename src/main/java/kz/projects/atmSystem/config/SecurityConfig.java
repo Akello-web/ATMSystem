@@ -40,7 +40,7 @@ public class SecurityConfig {
     http.csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                     authorizationManagerRequestMatcherRegistry.requestMatchers(HttpMethod.DELETE).hasRole("ADMIN")
-                            .requestMatchers("/swagger-ui.html").permitAll()
+                            .requestMatchers("/swagger-ui/index.html").permitAll()
                             .requestMatchers("/auth/**").permitAll()
                             .requestMatchers("/accounts/user").hasRole("USER")
                             .requestMatchers("/admin/**").hasRole("ADMIN")
