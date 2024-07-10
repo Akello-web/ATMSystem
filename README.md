@@ -62,5 +62,5 @@ To run the Telemedicine System locally:
 1. Clone this repository.
 2. Configure PostgreSQL database settings in `application.properties`.
 3. Build and run the application using Gradle.
-4. Access the API documentation via Swagger UI (`http://localhost:8090/swagger-ui.html`).
+4. Access the API documentation via Swagger UI (`http://localhost:8088/swagger-ui.html`).
 
