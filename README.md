@@ -55,9 +55,12 @@ The Automated Teller Machine (ATM) System is a secure and efficient banking appl
 #### Admin Functions
 - `GET /admin/transactions`: Retrieve all transaction logs for monitoring and management purposes.
 
-## Installation and Setup
-### Prerequisites
-- Java JDK 8 or higher
-- Gradle build tool
-- PostgreSQL database
+## Getting Started
+
+To run the Telemedicine System locally:
+
+1. Clone this repository.
+2. Configure PostgreSQL database settings in `application.properties`.
+3. Build and run the application using Gradle.
+4. Access the API documentation via Swagger UI (`http://localhost:8090/swagger-ui.html`).
 
