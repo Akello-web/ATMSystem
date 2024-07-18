@@ -29,6 +29,9 @@ public class TransactionServiceImpl implements TransactionService {
   @Override
   @Transactional
   public void deposit(Double amount) {
+    if (amount < 0){
+      throw new IllegalArgumentException("Amount cannot be negative");
+    }
     User currentUser = userService.getCurrentSessionUser();
     currentUser.setBalance(userService.getCurrentUserBalance() + amount);
     userService.saveUser(currentUser);
@@ -44,8 +47,18 @@ public class TransactionServiceImpl implements TransactionService {
   @Override
   @Transactional
   public void withdrawAmount(Double amount) {
+    if (amount < 0){
+      throw new IllegalArgumentException("Amount cannot be negative");
+    }
+
     User currentUser = userService.getCurrentSessionUser();
-    currentUser.setBalance(userService.getCurrentUserBalance() - amount);
+    double balanceLeft = currentUser.getBalance() - amount;
+
+    if (balanceLeft < 0){
+      throw new IllegalArgumentException("Not enough balance in your account!");
+    }
+
+    currentUser.setBalance(balanceLeft);
     userService.saveUser(currentUser);
 
     Transaction transaction = new Transaction();
@@ -60,10 +73,26 @@ public class TransactionServiceImpl implements TransactionService {
   @Transactional
   public void transferAmount(TransactionRequest request) {
     User currentUser = userService.getCurrentSessionUser();
+
+    User checkAccount = userService.getUser(request.getAccount());
+    if(checkAccount==null){
+      throw new IllegalArgumentException("Account doesn't exist");
+    }
+
+    if (request.getAmount() < 0){
+      throw new IllegalArgumentException("Amount cannot be negative");
+    }
+
     if (!Objects.equals(currentUser.getAccountNumber(), request.getAccount())){
       User userToTransfer = userService.getUser(request.getAccount());
 
-      currentUser.setBalance(userService.getCurrentUserBalance() - request.getAmount());
+      double balanceLeft = currentUser.getBalance() - request.getAmount();
+
+      if (balanceLeft < 0){
+        throw new IllegalArgumentException("Not enough balance in your account!");
+      }
+
+      currentUser.setBalance(balanceLeft);
       userService.saveUser(currentUser);
 
       Double userToTransferAmount = userToTransfer.getBalance();
@@ -89,5 +118,4 @@ public class TransactionServiceImpl implements TransactionService {
             .map(TransactionMapper::toDto)
             .collect(Collectors.toList());
   }
-
 }
