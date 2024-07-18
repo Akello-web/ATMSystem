@@ -105,4 +105,15 @@ public class UserServiceImpl implements UserService {
             .map(UserMapper::toDto)
             .collect(Collectors.toList());
   }
+
+  @Override
+  public String updatePassword(String oldPin, String newPin) {
+    User currentUser = getCurrentSessionUser();
+    if(passwordEncoder.matches(oldPin, currentUser.getPassword())){
+      currentUser.setPin(passwordEncoder.encode(newPin));
+      userRepository.save(currentUser);
+      return "Password successfully changed";
+    }
+    return "Password mismatch";
+  }
 }

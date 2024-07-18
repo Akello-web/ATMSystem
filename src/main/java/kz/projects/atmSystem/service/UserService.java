@@ -13,6 +13,6 @@ public interface UserService {
   User getCurrentSessionUser();
   Double getCurrentUserBalance();
   User getUser(String accountNumber);
-
   List<UserDTO> getUsers();
+  String updatePassword(String oldPin, String newPin);
 }

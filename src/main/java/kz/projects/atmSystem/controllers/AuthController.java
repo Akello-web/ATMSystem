@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.projects.atmSystem.dto.AuthRequest;
+import kz.projects.atmSystem.dto.UpdatePinRequest;
 import kz.projects.atmSystem.dto.UserDTO;
 import kz.projects.atmSystem.mapper.UserMapper;
 import kz.projects.atmSystem.model.User;
@@ -25,7 +26,7 @@ public class AuthController {
 
   private final UserService userService;
 
-  @PostMapping(value = "register")
+  @PostMapping(value = "/register")
   @Operation(summary = "Register user", description = "Register a user and add to database")
   @ApiResponses(value = {
           @ApiResponse(responseCode = "200", description = "Successfully registered",
@@ -63,6 +64,11 @@ public class AuthController {
   public ResponseEntity<UserDTO> getCurrentUserInfo(){
     User currentUser = userService.getCurrentSessionUser();
     return new ResponseEntity<>(UserMapper.toDto(currentUser), HttpStatus.OK);
+  }
+
+  @PostMapping(value = "/update-pin")
+  public ResponseEntity<String> changePin(@RequestBody UpdatePinRequest request){
+    return new ResponseEntity<>(userService.updatePassword(request.getOldPin(), request.getNewPin()), HttpStatus.OK);
   }
 }
 
