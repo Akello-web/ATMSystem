@@ -25,6 +25,11 @@ public class User implements UserDetails {
   private double balance;
 
   @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(
+          name = "user_permissions",
+          joinColumns = @JoinColumn(name = "user_id"),
+          inverseJoinColumns = @JoinColumn(name = "permission_id")
+  )
   private List<Permissions> permissionList;
 
   @Override
