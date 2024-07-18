@@ -1,6 +1,8 @@
 package kz.projects.atmSystem.service.impl;
 
 import jakarta.transaction.Transactional;
+import kz.projects.atmSystem.dto.TransactionDTO;
+import kz.projects.atmSystem.mapper.TransactionMapper;
 import kz.projects.atmSystem.model.Transaction;
 import kz.projects.atmSystem.model.TransactionType;
 import kz.projects.atmSystem.model.User;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -79,8 +82,11 @@ public class TransactionServiceImpl implements TransactionService {
   }
 
   @Override
-  public List<Transaction> getTransactions() {
-    return transactionRepository.findAll();
+  public List<TransactionDTO> getTransactions() {
+    List<Transaction> transactions = transactionRepository.findAll();
+    return transactions.stream()
+            .map(TransactionMapper::toDto)
+            .collect(Collectors.toList());
   }
 
 }
