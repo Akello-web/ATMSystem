@@ -5,8 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kz.projects.atmSystem.dto.AmountRequest;
-import kz.projects.atmSystem.dto.TransferRequest;
+import kz.projects.atmSystem.dto.TransactionRequest;
 import kz.projects.atmSystem.service.TransactionService;
 import kz.projects.atmSystem.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +41,8 @@ public class AccountsController {
           @ApiResponse(responseCode = "200", description = "Deposit processed successfully", content = @Content),
           @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content)
   })
-  public ResponseEntity<String> setUserDeposit(@RequestBody AmountRequest amountRequest){
-    transactionService.deposit(amountRequest.getAmount());
+  public ResponseEntity<String> setUserDeposit(@RequestBody TransactionRequest request){
+    transactionService.deposit(request.getAmount());
     return ResponseEntity.ok("Deposit processed successfully");
   }
 
@@ -53,8 +52,8 @@ public class AccountsController {
           @ApiResponse(responseCode = "200", description = "Withdrawal processed successfully", content = @Content),
           @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content)
   })
-  public ResponseEntity<String> setUserWithdrawal(@RequestBody AmountRequest amountRequest){
-    transactionService.withdrawAmount(amountRequest.getAmount());
+  public ResponseEntity<String> setUserWithdrawal(@RequestBody TransactionRequest request){
+    transactionService.withdrawAmount(request.getAmount());
     return ResponseEntity.ok("Withdrawal processed successfully");
   }
 
@@ -65,8 +64,8 @@ public class AccountsController {
           @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
           @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
   })
-  public ResponseEntity<String> setUserTransfer(@RequestBody TransferRequest transferRequest){
-    transactionService.transferAmount(transferRequest.getAccount(), transferRequest.getAmount());
+  public ResponseEntity<String> setUserTransfer(@RequestBody TransactionRequest transferRequest){
+    transactionService.transferAmount(transferRequest);
     return ResponseEntity.ok("Transfer processed successfully");
   }
 

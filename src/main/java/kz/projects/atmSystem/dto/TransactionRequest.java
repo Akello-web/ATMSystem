@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TransferRequest {
+public class TransactionRequest {
   private String account;
   private Double amount;
 }

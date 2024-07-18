@@ -2,6 +2,7 @@ package kz.projects.atmSystem.service.impl;
 
 import jakarta.transaction.Transactional;
 import kz.projects.atmSystem.dto.TransactionDTO;
+import kz.projects.atmSystem.dto.TransactionRequest;
 import kz.projects.atmSystem.mapper.TransactionMapper;
 import kz.projects.atmSystem.model.Transaction;
 import kz.projects.atmSystem.model.TransactionType;
@@ -57,21 +58,21 @@ public class TransactionServiceImpl implements TransactionService {
 
   @Override
   @Transactional
-  public void transferAmount(String accountNumber, Double amount) {
+  public void transferAmount(TransactionRequest request) {
     User currentUser = userService.getCurrentSessionUser();
-    if (!Objects.equals(currentUser.getAccountNumber(), accountNumber)){
-      User userToTransfer = userService.getUser(accountNumber);
+    if (!Objects.equals(currentUser.getAccountNumber(), request.getAccount())){
+      User userToTransfer = userService.getUser(request.getAccount());
 
-      currentUser.setBalance(userService.getCurrentUserBalance() - amount);
+      currentUser.setBalance(userService.getCurrentUserBalance() - request.getAmount());
       userService.saveUser(currentUser);
 
       Double userToTransferAmount = userToTransfer.getBalance();
-      userToTransfer.setBalance(userToTransferAmount + amount);
+      userToTransfer.setBalance(userToTransferAmount + request.getAmount());
       userService.saveUser(userToTransfer);
 
       Transaction transaction = new Transaction();
       transaction.setType(TransactionType.TRANSFER);
-      transaction.setAmount(amount);
+      transaction.setAmount(request.getAmount());
       transaction.setDate(LocalDateTime.now());
       transaction.setUser(currentUser);
       transactionRepository.save(transaction);
