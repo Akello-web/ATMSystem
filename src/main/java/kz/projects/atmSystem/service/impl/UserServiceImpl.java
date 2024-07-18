@@ -19,7 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -94,5 +96,13 @@ public class UserServiceImpl implements UserService {
   public User getUser(String accountNumber) {
     return userRepository.findByAccountNumber(accountNumber)
             .orElseThrow(() -> new IllegalArgumentException("Theres no user with this account number"));
+  }
+
+  @Override
+  public List<UserDTO> getUsers() {
+    List<User> users = userRepository.findAll();
+    return users.stream()
+            .map(UserMapper::toDto)
+            .collect(Collectors.toList());
   }
 }
