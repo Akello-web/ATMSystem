@@ -7,8 +7,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.projects.atmSystem.dto.AuthRequest;
+import kz.projects.atmSystem.dto.UserDTO;
+import kz.projects.atmSystem.mapper.UserMapper;
 import kz.projects.atmSystem.model.User;
-import kz.projects.atmSystem.service.impl.UserServiceImpl;
+import kz.projects.atmSystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Authentication", description = "Endpoints for user authentication")
 public class AuthController {
 
-  private final UserServiceImpl userService;
+  private final UserService userService;
 
   @PostMapping(value = "register")
   @Operation(summary = "Register user", description = "Register a user and add to database")
@@ -30,7 +32,7 @@ public class AuthController {
                   content = @Content(schema = @Schema(implementation = UserDetails.class))),
           @ApiResponse(responseCode = "401", description = "Invalid credentials", content = @Content)
   })
-  public ResponseEntity<User> registerUser(@RequestBody User user){
+  public ResponseEntity<UserDTO> registerUser(@RequestBody User user){
     return new ResponseEntity<>(userService.register(user), HttpStatus.CREATED);
   }
 
@@ -43,8 +45,8 @@ public class AuthController {
   })
   public ResponseEntity<?> loginUser(@RequestBody AuthRequest authRequest){
     try {
-      UserDetails userDetails = userService.loginUser(authRequest);
-      return ResponseEntity.ok(userDetails);
+      UserDTO user = userService.loginUser(authRequest);
+      return ResponseEntity.ok(user);
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
     }
@@ -58,9 +60,9 @@ public class AuthController {
                   content = {@io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")}),
           @ApiResponse(responseCode = "401", description = "Unauthorized", content = @io.swagger.v3.oas.annotations.media.Content)
   })
-  public ResponseEntity<User> getCurrentUserInfo(){
+  public ResponseEntity<UserDTO> getCurrentUserInfo(){
     User currentUser = userService.getCurrentSessionUser();
-    return new ResponseEntity<>(currentUser, HttpStatus.OK);
+    return new ResponseEntity<>(UserMapper.toDto(currentUser), HttpStatus.OK);
   }
 }
 

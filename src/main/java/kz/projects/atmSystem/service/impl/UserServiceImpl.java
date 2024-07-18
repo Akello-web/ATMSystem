@@ -1,6 +1,8 @@
 package kz.projects.atmSystem.service.impl;
 
 import kz.projects.atmSystem.dto.AuthRequest;
+import kz.projects.atmSystem.dto.UserDTO;
+import kz.projects.atmSystem.mapper.UserMapper;
 import kz.projects.atmSystem.model.Permissions;
 import kz.projects.atmSystem.model.User;
 import kz.projects.atmSystem.repositories.PermissionRepository;
@@ -37,7 +39,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User register(User user) {
+  public UserDTO register(User user) {
     Optional<User> checkUser = userRepository.findByAccountNumber(user.getAccountNumber());
 
     if (checkUser.isPresent()){
@@ -54,19 +56,19 @@ public class UserServiceImpl implements UserService {
     }
 
     user.setPermissionList(Collections.singletonList(defaultPermission));
-    return userRepository.save(user);
+    return UserMapper.toDto(userRepository.save(user));
   }
 
 
   @Override
-  public UserDetails loginUser(AuthRequest request) {
+  public UserDTO loginUser(AuthRequest request) {
     UserDetails userDetails = myUserDetailsService.loadUserByUsername(request.getUsername());
     if (passwordEncoder.matches(request.getPassword(), userDetails.getPassword())) {
       UsernamePasswordAuthenticationToken authenticationToken =
               new UsernamePasswordAuthenticationToken(userDetails, null,
                       userDetails.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-      return userDetails;
+      return UserMapper.toDto((User) userDetails);
     } else {
       throw new UsernameNotFoundException("Invalid credentials");
     }
@@ -93,6 +95,4 @@ public class UserServiceImpl implements UserService {
     return userRepository.findByAccountNumber(accountNumber)
             .orElseThrow(() -> new IllegalArgumentException("Theres no user with this account number"));
   }
-
-
 }
