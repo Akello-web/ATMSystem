@@ -31,7 +31,7 @@ public class AuthController {
           @ApiResponse(responseCode = "401", description = "Invalid credentials", content = @Content)
   })
   public ResponseEntity<User> registerUser(@RequestBody User user){
-    return new ResponseEntity<>(userService.addUser(user), HttpStatus.CREATED);
+    return new ResponseEntity<>(userService.register(user), HttpStatus.CREATED);
   }
 
   @PostMapping(value = "/login")
@@ -43,11 +43,24 @@ public class AuthController {
   })
   public ResponseEntity<?> loginUser(@RequestBody AuthRequest authRequest){
     try {
-      UserDetails userDetails = userService.loginUser(authRequest.getUsername(), authRequest.getPassword());
+      UserDetails userDetails = userService.loginUser(authRequest);
       return ResponseEntity.ok(userDetails);
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
     }
+  }
+
+  @GetMapping(value = "/current-user")
+  @Operation(summary = "Get current user information",
+          description = "Retrieve details of the currently authenticated user")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Successfully retrieved current user info",
+                  content = {@io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")}),
+          @ApiResponse(responseCode = "401", description = "Unauthorized", content = @io.swagger.v3.oas.annotations.media.Content)
+  })
+  public ResponseEntity<User> getCurrentUserInfo(){
+    User currentUser = userService.getCurrentSessionUser();
+    return new ResponseEntity<>(currentUser, HttpStatus.OK);
   }
 }
 

@@ -1,6 +1,6 @@
 package kz.projects.atmSystem.service.impl;
 
-import kz.projects.atmSystem.model.MyUserDetails;
+import kz.projects.atmSystem.dto.AuthRequest;
 import kz.projects.atmSystem.model.Permissions;
 import kz.projects.atmSystem.model.User;
 import kz.projects.atmSystem.repositories.PermissionRepository;
@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,9 +37,31 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDetails loginUser(String accountNumber, String pin) {
-    UserDetails userDetails = myUserDetailsService.loadUserByUsername(accountNumber);
-    if (passwordEncoder.matches(pin, userDetails.getPassword())) {
+  public User register(User user) {
+    Optional<User> checkUser = userRepository.findByAccountNumber(user.getAccountNumber());
+
+    if (checkUser.isPresent()){
+      throw new IllegalArgumentException("User with this email already exists.");
+    }
+
+    user.setPin(passwordEncoder.encode(user.getPin()));
+    Permissions defaultPermission = permissionRepository.findByRole("ROLE_USER");
+
+    if (defaultPermission == null) {
+      defaultPermission = new Permissions();
+      defaultPermission.setRole("ROLE_USER");
+      defaultPermission = permissionRepository.save(defaultPermission);
+    }
+
+    user.setPermissionList(Collections.singletonList(defaultPermission));
+    return userRepository.save(user);
+  }
+
+
+  @Override
+  public UserDetails loginUser(AuthRequest request) {
+    UserDetails userDetails = myUserDetailsService.loadUserByUsername(request.getUsername());
+    if (passwordEncoder.matches(request.getPassword(), userDetails.getPassword())) {
       UsernamePasswordAuthenticationToken authenticationToken =
               new UsernamePasswordAuthenticationToken(userDetails, null,
                       userDetails.getAuthorities());
@@ -49,47 +72,26 @@ public class UserServiceImpl implements UserService {
     }
   }
 
-  @Override
-  public User addUser(User user) {
-    User checkUser = userRepository.findByAccountNumber(user.getAccountNumber());
-    if(checkUser==null){
-      user.setPin(passwordEncoder.encode(user.getPin()));
-      Permissions defaultPermission = permissionRepository.findByRole("ROLE_USER");
-
-      if (defaultPermission == null) {
-        defaultPermission = new Permissions();
-        defaultPermission.setRole("ROLE_USER");
-        defaultPermission = permissionRepository.save(defaultPermission);
-      }
-      user.setPermissionList(Collections.singletonList(defaultPermission));
-      return userRepository.save(user);
-    }
-    else {
-      return null;
-    }
-  }
 
   @Override
-  public MyUserDetails getCurrentSessionUser() {
+  public User getCurrentSessionUser() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
-      MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-      if (myUserDetails != null) {
-        return myUserDetails;
-      }
+      return (User) authentication.getPrincipal();
     }
     return null;
   }
 
   @Override
   public Double getCurrentUserBalance() {
-    MyUserDetails currentUser = getCurrentSessionUser();
-    return currentUser.getUser().getBalance();
+    User currentUser = getCurrentSessionUser();
+    return currentUser.getBalance();
   }
 
   @Override
   public User getUser(String accountNumber) {
-    return userRepository.findByAccountNumber(accountNumber);
+    return userRepository.findByAccountNumber(accountNumber)
+            .orElseThrow(() -> new IllegalArgumentException("Theres no user with this account number"));
   }
 
 

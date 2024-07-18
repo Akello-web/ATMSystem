@@ -1,7 +1,6 @@
 package kz.projects.atmSystem.service.impl;
 
 import jakarta.transaction.Transactional;
-import kz.projects.atmSystem.model.MyUserDetails;
 import kz.projects.atmSystem.model.Transaction;
 import kz.projects.atmSystem.model.TransactionType;
 import kz.projects.atmSystem.model.User;
@@ -26,42 +25,42 @@ public class TransactionServiceImpl implements TransactionService {
   @Override
   @Transactional
   public void deposit(Double amount) {
-    MyUserDetails currentUser = userService.getCurrentSessionUser();
-    currentUser.getUser().setBalance(userService.getCurrentUserBalance() + amount);
-    userService.saveUser(currentUser.getUser());
+    User currentUser = userService.getCurrentSessionUser();
+    currentUser.setBalance(userService.getCurrentUserBalance() + amount);
+    userService.saveUser(currentUser);
 
     Transaction transaction = new Transaction();
     transaction.setType(TransactionType.DEPOSIT);
     transaction.setAmount(amount);
     transaction.setDate(LocalDateTime.now());
-    transaction.setUser(currentUser.getUser());
+    transaction.setUser(currentUser);
     transactionRepository.save(transaction);
   }
 
   @Override
   @Transactional
   public void withdrawAmount(Double amount) {
-    MyUserDetails currentUser = userService.getCurrentSessionUser();
-    currentUser.getUser().setBalance(userService.getCurrentUserBalance() - amount);
-    userService.saveUser(currentUser.getUser());
+    User currentUser = userService.getCurrentSessionUser();
+    currentUser.setBalance(userService.getCurrentUserBalance() - amount);
+    userService.saveUser(currentUser);
 
     Transaction transaction = new Transaction();
     transaction.setType(TransactionType.WITHDRAWAL);
     transaction.setAmount(amount);
     transaction.setDate(LocalDateTime.now());
-    transaction.setUser(currentUser.getUser());
+    transaction.setUser(currentUser);
     transactionRepository.save(transaction);
   }
 
   @Override
   @Transactional
   public void transferAmount(String accountNumber, Double amount) {
-    MyUserDetails currentUser = userService.getCurrentSessionUser();
-    if (!Objects.equals(currentUser.getUser().getAccountNumber(), accountNumber)){
+    User currentUser = userService.getCurrentSessionUser();
+    if (!Objects.equals(currentUser.getAccountNumber(), accountNumber)){
       User userToTransfer = userService.getUser(accountNumber);
 
-      currentUser.getUser().setBalance(userService.getCurrentUserBalance() - amount);
-      userService.saveUser(currentUser.getUser());
+      currentUser.setBalance(userService.getCurrentUserBalance() - amount);
+      userService.saveUser(currentUser);
 
       Double userToTransferAmount = userToTransfer.getBalance();
       userToTransfer.setBalance(userToTransferAmount + amount);
@@ -71,7 +70,7 @@ public class TransactionServiceImpl implements TransactionService {
       transaction.setType(TransactionType.TRANSFER);
       transaction.setAmount(amount);
       transaction.setDate(LocalDateTime.now());
-      transaction.setUser(currentUser.getUser());
+      transaction.setUser(currentUser);
       transactionRepository.save(transaction);
     }
     else {
