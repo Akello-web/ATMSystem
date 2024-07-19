@@ -64,8 +64,8 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO loginUser(AuthRequest request) {
-    UserDetails userDetails = myUserDetailsService.loadUserByUsername(request.getUsername());
-    if (passwordEncoder.matches(request.getPassword(), userDetails.getPassword())) {
+    UserDetails userDetails = myUserDetailsService.loadUserByUsername(request.username());
+    if (passwordEncoder.matches(request.password(), userDetails.getPassword())) {
       UsernamePasswordAuthenticationToken authenticationToken =
               new UsernamePasswordAuthenticationToken(userDetails, null,
                       userDetails.getAuthorities());

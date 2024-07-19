@@ -68,7 +68,7 @@ public class AuthController {
 
   @PostMapping(value = "/update-pin")
   public ResponseEntity<String> changePin(@RequestBody UpdatePinRequest request){
-    return new ResponseEntity<>(userService.updatePassword(request.getOldPin(), request.getNewPin()), HttpStatus.OK);
+    return new ResponseEntity<>(userService.updatePassword(request.oldPin(), request.newPin()), HttpStatus.OK);
   }
 }
 

@@ -1,11 +1,3 @@
 package kz.projects.atmSystem.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
-public class UpdatePinRequest {
-  private String oldPin;
-  private String newPin;
-}
+public record UpdatePinRequest(String oldPin, String newPin) { }

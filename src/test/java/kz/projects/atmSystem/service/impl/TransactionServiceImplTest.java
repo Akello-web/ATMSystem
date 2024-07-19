@@ -93,9 +93,7 @@ public class TransactionServiceImplTest {
     recipientUser.setAccountNumber("KZ02");
     recipientUser.setBalance(500.0);
 
-    TransactionRequest request = new TransactionRequest();
-    request.setAccount("KZ02");
-    request.setAmount(300.0);
+    TransactionRequest request = new TransactionRequest("KZ02", 300.0);
 
     when(userService.getCurrentSessionUser()).thenReturn(currentUser);
     when(userService.getCurrentUserBalance()).thenReturn(currentUser.getBalance());

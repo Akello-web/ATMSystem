@@ -42,7 +42,7 @@ public class AccountsController {
           @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content)
   })
   public ResponseEntity<String> setUserDeposit(@RequestBody TransactionRequest request){
-    transactionService.deposit(request.getAmount());
+    transactionService.deposit(request.amount());
     return ResponseEntity.ok("Deposit processed successfully");
   }
 
@@ -53,7 +53,7 @@ public class AccountsController {
           @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content)
   })
   public ResponseEntity<String> setUserWithdrawal(@RequestBody TransactionRequest request){
-    transactionService.withdrawAmount(request.getAmount());
+    transactionService.withdrawAmount(request.amount());
     return ResponseEntity.ok("Withdrawal processed successfully");
   }
 

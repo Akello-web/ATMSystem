@@ -74,19 +74,19 @@ public class TransactionServiceImpl implements TransactionService {
   public void transferAmount(TransactionRequest request) {
     User currentUser = userService.getCurrentSessionUser();
 
-    User checkAccount = userService.getUser(request.getAccount());
+    User checkAccount = userService.getUser(request.account());
     if(checkAccount==null){
       throw new IllegalArgumentException("Account doesn't exist");
     }
 
-    if (request.getAmount() < 0){
+    if (request.amount() < 0){
       throw new IllegalArgumentException("Amount cannot be negative");
     }
 
-    if (!Objects.equals(currentUser.getAccountNumber(), request.getAccount())){
-      User userToTransfer = userService.getUser(request.getAccount());
+    if (!Objects.equals(currentUser.getAccountNumber(), request.account())){
+      User userToTransfer = userService.getUser(request.account());
 
-      double balanceLeft = currentUser.getBalance() - request.getAmount();
+      double balanceLeft = currentUser.getBalance() - request.amount();
 
       if (balanceLeft < 0){
         throw new IllegalArgumentException("Not enough balance in your account!");
@@ -96,12 +96,12 @@ public class TransactionServiceImpl implements TransactionService {
       userService.saveUser(currentUser);
 
       Double userToTransferAmount = userToTransfer.getBalance();
-      userToTransfer.setBalance(userToTransferAmount + request.getAmount());
+      userToTransfer.setBalance(userToTransferAmount + request.amount());
       userService.saveUser(userToTransfer);
 
       Transaction transaction = new Transaction();
       transaction.setType(TransactionType.TRANSFER);
-      transaction.setAmount(request.getAmount());
+      transaction.setAmount(request.amount());
       transaction.setDate(LocalDateTime.now());
       transaction.setUser(currentUser);
       transactionRepository.save(transaction);

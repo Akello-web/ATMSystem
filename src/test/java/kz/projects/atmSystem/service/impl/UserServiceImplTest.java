@@ -71,9 +71,7 @@ public class UserServiceImplTest {
 
   @Test
   public void testLoginUser_ValidCredentials_Success() {
-    AuthRequest request = new AuthRequest();
-    request.setUsername("KZ01");
-    request.setPassword("1111");
+    AuthRequest request = new AuthRequest("KZ01", "1111");
 
     User user = new User();
     user.setAccountNumber("KZ01");
@@ -91,9 +89,7 @@ public class UserServiceImplTest {
 
   @Test
   public void testLoginUser_InvalidCredentials_ExceptionThrown() {
-    AuthRequest request = new AuthRequest();
-    request.setUsername("KZ01");
-    request.setPassword("wrongpassword");
+    AuthRequest request = new AuthRequest("KZ01", "wrongpassword");
 
     User user = new User();
     user.setAccountNumber("KZ01");
