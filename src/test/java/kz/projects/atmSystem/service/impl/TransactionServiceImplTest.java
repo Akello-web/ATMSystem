@@ -135,15 +135,15 @@ public class TransactionServiceImplTest {
     List<TransactionDTO> transactionDTOs = transactionService.getTransactions();
 
     assertEquals(2, transactionDTOs.size());
-    assertEquals(transaction1.getId(), transactionDTOs.get(0).getId());
-    assertEquals(transaction1.getType(), transactionDTOs.get(0).getType());
-    assertEquals(transaction1.getAmount(), transactionDTOs.get(0).getAmount());
-    assertEquals(transaction1.getDate(), transactionDTOs.get(0).getDate());
+    assertEquals(transaction1.getId(), transactionDTOs.get(0).id());
+    assertEquals(transaction1.getType(), transactionDTOs.get(0).type());
+    assertEquals(transaction1.getAmount(), transactionDTOs.get(0).amount());
+    assertEquals(transaction1.getDate(), transactionDTOs.get(0).date());
 
-    assertEquals(transaction2.getId(), transactionDTOs.get(1).getId());
-    assertEquals(transaction2.getType(), transactionDTOs.get(1).getType());
-    assertEquals(transaction2.getAmount(), transactionDTOs.get(1).getAmount());
-    assertEquals(transaction2.getDate(), transactionDTOs.get(1).getDate());
+    assertEquals(transaction2.getId(), transactionDTOs.get(1).id());
+    assertEquals(transaction2.getType(), transactionDTOs.get(1).type());
+    assertEquals(transaction2.getAmount(), transactionDTOs.get(1).amount());
+    assertEquals(transaction2.getDate(), transactionDTOs.get(1).date());
   }
 }
 

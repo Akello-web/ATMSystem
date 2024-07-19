@@ -54,9 +54,9 @@ public class UserServiceImplTest {
     UserDTO result = userService.register(user);
 
     assertNotNull(result);
-    assertEquals("KZTest", result.getAccountNumber());
-    assertEquals(0.0, result.getBalance());
-    assertEquals(1, result.getPermissionList().size());
+    assertEquals("KZTest", result.accountNumber());
+    assertEquals(0.0, result.balance());
+    assertEquals(1, result.permissionList().size());
   }
 
   @Test
@@ -85,8 +85,8 @@ public class UserServiceImplTest {
     UserDTO result = userService.loginUser(request);
 
     assertNotNull(result);
-    assertEquals("KZ01", result.getAccountNumber());
-    assertNull(result.getPermissionList()); // Assuming login doesn't fetch permissions in this context
+    assertEquals("KZ01", result.accountNumber());
+    assertNull(result.permissionList());
   }
 
   @Test
@@ -168,8 +168,8 @@ public class UserServiceImplTest {
 
     assertNotNull(result);
     assertEquals(2, result.size());
-    assertEquals("KZ01", result.get(0).getAccountNumber());
-    assertEquals("KZ02", result.get(1).getAccountNumber());
+    assertEquals("KZ01", result.get(0).accountNumber());
+    assertEquals("KZ02", result.get(1).accountNumber());
   }
 }
 
