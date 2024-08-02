@@ -22,6 +22,7 @@ The Automated Teller Machine (ATM) System is a secure and efficient banking appl
 - **Spring Security**: Provides robust authentication and authorization mechanisms to secure endpoints and manage user sessions.
 - **Spring Data JPA**: Implements data access and persistence layer for managing user accounts and transaction records.
 - **PostgreSQL**: Relational database management system for storing user and transaction data securely.
+- **Liquibase**: An open-source tool for keeping track of database schema script revisions.
 - **Swagger/OpenAPI**: Documentation tool for designing, building, documenting, and consuming RESTful APIs.
 - **JUnit**: Testing framework for unit testing of Java applications.
 - **Mockito**: Mocking framework for unit tests in Java.
